@@ -1,0 +1,69 @@
+service: microservice-getdata-to-app
+
+plugins:
+  - serverless-offline
+  - serverless-prune-plugin
+  - serverless-plugin-existing-s3
+  - serverless-domain-manager
+  - serverless-iam-roles-per-function
+  - serverless-latest-layer-version
+
+params:
+  default:
+    api-domain: ${ssm:/st-marche/${sls:stage}/api/getdata-to-app/api-domain}
+    security-group-id: sg-0ac122ff7d5e0251b
+    subnet-id: subnet-0c45fe11c0098e164
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  profile: st-marche-lambda-${sls:stage}
+  stage: ${opt:stage, 'staging'}
+  environment: ${file(./env.yml)}
+  deploymentPrefix: ${sls:stage}
+  deploymentBucket:
+    name: br.com.marche.serverless.deploys
+  apiGateway:
+    apiKeys: getdata-to-app-${sls:stage}
+  tracing:
+    apiGateway: true
+    lambda: true
+
+custom:
+  customDomain:
+    domainName: ${param:api-domain}
+    stage: ${sls:stage}
+    basePath: getdata-to-app
+    autoDomain: false
+  prune:
+    automatic: true
+    number: 3
+  serverless-offline:
+    host: localhost
+    noPrependStageInUrl: true
+    useWorkerThreads: true
+    apiKey: ygyNftQE95aEDQFxx0G8T8jN7ZKVFEnx7AlW8Jfw
+    prefix: app
+
+functions:
+  - ${file(./infra/lambda/get_data-api.yml)}
+
+resources:
+  - ${file(./infra/api-gateway/auth-response.yml)}
+
+package:
+  individually: true
+  exclude:
+    - __tests__/**
+  patterns:
+    - "!tmp/**"
+    - "!package-lock.json"
+    - "!.editorconfig"
+    - "!.vscode/**"
+    - "!.github/**"
+    - "!.git/**"
+    - "!.nvmrc"
+    - "!README.md"
+    - "!env.yml"
+    - 'node_modules/.cache/**'
