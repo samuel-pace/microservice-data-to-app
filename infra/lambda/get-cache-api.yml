@@ -1,0 +1,14 @@
+get-cache-api:
+  handler: functions/api/get_cache/index.handler
+  layers:
+    - arn:aws:lambda:us-east-1:764707535680:layer:store-${sls:stage}:latest
+  iamRoleStatementsName: get-data-read-${sls:stage}
+  iamRoleStatements: ${file(./infra/api-gateway/vpc-iam-role.yml)}
+  vpc: ${file(./infra/api-gateway/vpc-access.yml)}
+ 
+  events:
+    - http:
+        path: /recomendation/{cpf}
+        method: GET
+        cors: ${file(./infra/api-gateway/cors.yml)}
+        private: true
