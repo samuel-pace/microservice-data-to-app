@@ -1,0 +1,4 @@
+securityGroupIds:
+  - ${param:security-group-id}
+subnetIds:
+  - ${param:subnet-id}

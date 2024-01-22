@@ -1,0 +1,4 @@
+- Effect: "Allow"
+  Action:
+    - ec2:CreateNetworkInterface
+  Resource: "*"
