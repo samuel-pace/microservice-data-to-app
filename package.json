@@ -34,8 +34,5 @@
     "testPathIgnorePatterns": [
       "./__tests__/support/"
     ]
-  },
-  "dependencies": {
-    "redis": "^4.6.12"
   }
 }

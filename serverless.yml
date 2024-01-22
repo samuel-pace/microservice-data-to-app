@@ -47,7 +47,7 @@ custom:
 
 
 functions:
-  - ${file(./infra/lambda/get-cache-api.yml)}
+  - ${file(./infra/lambda/get-data-api.yml)}
 
 resources:
   - ${file(./infra/api-gateway/auth-response.yml)}

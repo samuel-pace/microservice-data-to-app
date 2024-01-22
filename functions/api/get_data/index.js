@@ -1,16 +1,11 @@
 import responses from '../../../lib/reponses.js'
 import storeLayer from 'store-layer'
-import { setInCache } from '../../../lib/redis-client.js'
 
 const { msClient } = storeLayer()
 const dataLocation = process.env.DATA_LOCATION
 
 export const handler = async (event) => {
     const cpf = event.pathParameters.cpf
-    const cachedData = await getFromCache('recomendation-cpf:' + cpf)
-    if (cachedData) {
-        return responses.ok({ 'cpf': cpf, 'data': cachedData })
-    }
 
     try {
 
@@ -42,9 +37,9 @@ export const handler = async (event) => {
           ORDER BY rank
         `)
 
-        setInCache('recomendation-cpf:' + cpf, result.recordsets[0])
         pool.close()
         return responses.ok(result.recordsets[0])
+        
     } catch (error) {
 
         console.error(error)
